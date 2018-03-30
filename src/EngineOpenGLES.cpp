@@ -1,5 +1,7 @@
 #include "EngineOpenGLES.h"
 
+using namespace std;
+
 #if defined(TARGET_OPENGLES) && (!defined (OF_TARGET_API_VULKAN) )
 
 #include "ofAppRunner.h"

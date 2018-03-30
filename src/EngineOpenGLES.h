@@ -4,6 +4,7 @@
 #if defined(TARGET_OPENGLES) && (!defined (OF_TARGET_API_VULKAN) )
 
 #include "BaseEngine.h"
+#include "ofGLUtils.h"
 
 #include "ofEvents.h"
 #include "ofShader.h"
