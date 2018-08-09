@@ -24,6 +24,8 @@ namespace ofxImGui
 
 		ofVec2f windowPos;
 		ofVec2f windowSize;
+		bool lockPosition;
+		
 		bool mouseOverGui;
 		bool windowBlock;
 		int treeLevel;
@@ -33,6 +35,8 @@ namespace ofxImGui
 	};
 
 	static WindowOpen windowOpen;
+
+	bool IsMouseOverGui();
 
 	const char * GetUniqueName(ofAbstractParameter& parameter);
 	const char * GetUniqueName(const std::string& candidate);
