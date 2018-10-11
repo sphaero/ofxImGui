@@ -142,13 +142,13 @@ bool ofxImGui::BeginTree(ofAbstractParameter& parameter, Settings& settings)
 bool ofxImGui::BeginTree(const std::string& name, Settings& settings)
 {
 	bool result;
+	ImGui::SetNextTreeNodeOpen(true, ImGuiSetCond_Appearing);
 	if (settings.treeLevel == 0)
 	{
-		result = ImGui::CollapsingHeader(GetUniqueName(name));
+		result = ImGui::TreeNodeEx(GetUniqueName(name), ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_NoAutoOpenOnLog);
 	}
 	else
 	{
-		ImGui::SetNextTreeNodeOpen(true, ImGuiSetCond_Appearing);
 		result = ImGui::TreeNode(GetUniqueName(name));
 	}
 	if (result)
@@ -164,11 +164,8 @@ bool ofxImGui::BeginTree(const std::string& name, Settings& settings)
 //--------------------------------------------------------------
 void ofxImGui::EndTree(Settings& settings)
 {
-	if (settings.treeLevel > 1)
-	{
-		ImGui::TreePop();
-	}
-
+	ImGui::TreePop();
+	
 	settings.treeLevel = std::max(0, settings.treeLevel - 1);
 
 	// Clear the list of names from the stack.
@@ -753,6 +750,30 @@ void ofxImGui::AddImage(ofBaseHasTexture& hasTexture, const ofVec2f& size)
 //--------------------------------------------------------------
 void ofxImGui::AddImage(ofTexture& texture, const ofVec2f& size)
 {
-	ImTextureID textureID = (ImTextureID)(uintptr_t)texture.texData.textureID;
+	ImTextureID textureID = GetImTextureID(texture);
 	ImGui::Image(textureID, size);
 }
+
+
+static auto vector_getter = [](void* vec, int idx, const char** out_text)
+{
+    auto& vector = *static_cast<std::vector<std::string>*>(vec);
+    if (idx < 0 || idx >= static_cast<int>(vector.size())) { return false; }
+    *out_text = vector.at(idx).c_str();
+    return true;
+};
+
+bool ofxImGui::VectorCombo(const char* label, int* currIndex, std::vector<std::string>& values)
+{
+    if (values.empty()) { return false; }
+    return ImGui::Combo(label, currIndex, vector_getter,
+                        static_cast<void*>(&values), values.size());
+}
+
+bool ofxImGui::VectorListBox(const char* label, int* currIndex, std::vector<std::string>& values)
+{
+    if (values.empty()) { return false; }
+    return ImGui::ListBox(label, currIndex, vector_getter,
+                   static_cast<void*>(&values), values.size());
+}
+
