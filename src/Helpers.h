@@ -2,6 +2,7 @@
 
 #include "ofGLBaseTypes.h"
 #include "ofParameter.h"
+#include <stack>
 #include "ofRectangle.h"
 #include "ofTexture.h"
 #include "ofGLBaseTypes.h"
